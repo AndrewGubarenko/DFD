@@ -14,9 +14,11 @@
            http://www.springframework.org/schema/tx
            http://www.springframework.org/schema/tx/spring-tx-4.3.xsd">
 
+    <!--<import resource="classpath:Security.xml" />-->
+
     <context:component-scan base-package="com.ITVDN.DFD"/>
-    <mvc:annotation-driven/>
-    <tx:annotation-driven/>
+    <mvc:annotation-driven />
+    <tx:annotation-driven proxy-target-class="true" />
     <jpa:repositories base-package="com.ITVDN.DFD.repositories"
                       entity-manager-factory-ref="entityManagerFactory"
                       transaction-manager-ref="transactionManager" />
@@ -48,9 +50,27 @@
         <property name="packagesToScan" value="com.ITVDN.DFD"/>
     </bean>
 
-    <bean class = "org.springframework.web.servlet.view.InternalResourceViewResolver">
-        <property name = "prefix" value = "/WEB-INF/templates/"/>
-        <property name = "suffix" value = ".jsp"/>
+    <bean id="defaultDataConfig" class="com.ITVDN.DFD.config.DefaultDataConfig" init-method="createDefaultUsers" />
+
+    <mvc:resources mapping="/static/**" location="/static/" />
+
+    <bean class="org.thymeleaf.spring5.view.ThymeleafViewResolver">
+        <property name="templateEngine" ref="templateEngine" />
+    </bean>
+
+    <!-- SpringResourceTemplateResolver automatically integrates with Spring's own -->
+    <!-- resource resolution infrastructure, which is highly recommended.          -->
+    <bean id="templateResolver"
+          class="org.thymeleaf.spring5.templateresolver.SpringResourceTemplateResolver">
+        <property name="prefix" value="/WEB-INF/templates/" />
+        <property name="suffix" value=".html" />
+    </bean>
+
+    <!-- SpringTemplateEngine automatically applies SpringStandardDialect and      -->
+    <!-- enables Spring's own MessageSource message resolution mechanisms.         -->
+    <bean id="templateEngine"
+          class="org.thymeleaf.spring5.SpringTemplateEngine">
+        <property name="templateResolver" ref="templateResolver" />
     </bean>
 
 </beans>

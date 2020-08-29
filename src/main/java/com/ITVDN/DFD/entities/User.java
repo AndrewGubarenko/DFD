@@ -1,62 +1,58 @@
 package com.ITVDN.DFD.entities;
 
-import com.ITVDN.DFD.security.Role;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import javax.persistence.*;
-import java.util.Arrays;
-import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
+import java.util.stream.Collectors;
 
-@Entity
-@Table(name = "_USERS")
-@Inheritance(strategy = InheritanceType.SINGLE_TABLE)
-@DiscriminatorColumn(name = "USER_TYPE")
 @Getter
 @Setter
+@Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public abstract class User {
+@Entity
+@Table(name = "USER")
+public class User {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "ID")
     private Long id;
 
-    @Column(name = "EMAIL", unique = true, nullable = false)
-    private String email;
+    @Column(name = "USER_NAME", unique = true, nullable = false)
+    private String username;
 
     @Column(name = "PASSWORD", nullable = false)
     private String password;
 
     @ElementCollection(targetClass = Role.class, fetch = FetchType.EAGER)
-    @CollectionTable(name = "user_role", joinColumns = @JoinColumn(name = "user_id"))
+    @CollectionTable(name = "USER_ROLE", joinColumns = @JoinColumn(name = "USER_ID"))
     @Enumerated(EnumType.STRING)
-    private Set<Role> roles = new HashSet<>(Arrays.asList(Role.USER));
-
-    public void addRole(Role role) {
-        roles.add(role);
-    }
+    private Set<Role> roles;
 
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (!(o instanceof User)) return false;
         User user = (User) o;
-        return email.equals(user.email);
+        return id.equals(user.id) &&
+                username.equals(user.username) &&
+                roles.equals(user.roles);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(email);
+        return Objects.hash(id, username, roles);
     }
 
     @Override
     public String toString() {
-        return "email='" + email + "'";
+        return "User{" +
+                "id=" + id +
+                ", username='" + username + '\'' +
+                ", roles=" + "[" + roles.stream().map(r -> r.name() + " ").collect(Collectors.joining()) + "]" +
+                '}';
     }
 }
