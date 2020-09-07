@@ -1,9 +1,11 @@
-<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<%@ taglib prefix="security" uri="http://www.springframework.org/security/tags" %>
+
+<html>
     <head>
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
         <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css" integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">
-        <link rel="stylesheet" type="text/css" href="static/css/main.css" th:href="@{/static/css/main.css}" />
+        <link rel="stylesheet" type="text/css" href="statics/css/main.css" />
         <title>Delicious Food Delivery</title>
         <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
         <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
@@ -15,7 +17,12 @@
                 <div class="collapse navbar-collapse" id="navbarSupportedContent">
                     <ul class="navbar-nav mr-auto">
                       <li class="nav-item active">
-                        <a class="text-white nav-link" tabindex="-1" href="/DeliciousFoodDelivery_war_exploded/login">Log In</a>
+                          <security:authorize access="!isAuthenticated()">
+                              <a class="text-white nav-link" tabindex="-1" href="/DeliciousFoodDelivery_war_exploded/login">Log In</a>
+                          </security:authorize>
+                          <security:authorize access="isAuthenticated()">
+                              <a class="text-white nav-link" href="/DeliciousFoodDelivery_war_exploded/logout" th:href="@{/logout}">Log Out</a>
+                          </security:authorize>
                       </li>
                     </ul>
                 </div>
