@@ -5,6 +5,8 @@ import com.ITVDN.DFD.entities.User;
 import com.ITVDN.DFD.repositories.UserRepository;
 import com.ITVDN.DFD.services.Interfaces.IUserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PostAuthorize;
+import org.springframework.security.access.prepost.PostFilter;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -29,7 +31,7 @@ public class UserService implements IUserService {
     public void createUser(User user) {
 
         if (user.getRoles() == null) {
-            user.setRoles(new HashSet<>(Arrays.asList(Role.ROLE_USER)));
+            user.setRoles(new HashSet<>(Arrays.asList(Role.USER)));
         }
 
         userRepository.save(user);
@@ -37,13 +39,16 @@ public class UserService implements IUserService {
 
     @Override
     @Transactional
+    @PostAuthorize("returnObject.username == authentication.name")
     public User get(Long id) {
         return userRepository.findById(id).get();
     }
 
     @Override
     @Transactional
+    @PostFilter("filterObject.roles.size() > 1")
     public List<User> getList() {
         return userRepository.findAll();
     }
+
 }

@@ -1,4 +1,4 @@
-<%@ taglib prefix="security" uri="http://www.springframework.org/security/tags" %>
+<%@ taglib prefix="sec" uri="http://www.springframework.org/security/tags" %>
 
 <html>
     <head>
@@ -17,12 +17,12 @@
                 <div class="collapse navbar-collapse" id="navbarSupportedContent">
                     <ul class="navbar-nav mr-auto">
                       <li class="nav-item active">
-                          <security:authorize access="!isAuthenticated()">
+                          <sec:authorize access="!isAuthenticated()">
                               <a class="text-white nav-link" tabindex="-1" href="/DeliciousFoodDelivery_war_exploded/login">Log In</a>
-                          </security:authorize>
-                          <security:authorize access="isAuthenticated()">
+                          </sec:authorize>
+                          <sec:authorize access="isAuthenticated()">
                               <a class="text-white nav-link" href="/DeliciousFoodDelivery_war_exploded/logout" th:href="@{/logout}">Log Out</a>
-                          </security:authorize>
+                          </sec:authorize>
                       </li>
                     </ul>
                 </div>

@@ -52,6 +52,7 @@
                         <!--Spring security-->
 
                             <p class="card-text" th:text="*{user.roles}"></p>
+                            <p class="card-text"  th:text="${#authentication.principal.authorities}"></p>
                             <a href="#" class="btn btn-primary">Change password</a>
                         </div>
                     </div>
